@@ -45,6 +45,7 @@ class AudioRecorderService : RecorderService() {
             }
 
             Preferences.prefs.getInt(Preferences.audioChannelsKey, AudioChannels.MONO.value).let {
+                //1单声道 2立体声
                 setAudioChannels(it)
             }
 

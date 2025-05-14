@@ -52,6 +52,7 @@ import com.bnyro.recorder.ui.dialogs.AboutDialog
 import com.bnyro.recorder.ui.models.ThemeModel
 import com.bnyro.recorder.util.PickFolderContract
 import com.bnyro.recorder.util.Preferences
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,7 +138,7 @@ fun SettingsScreen() {
                     view.playSoundEffect(SoundEffectConstants.CLICK)
                     val lastDir = Preferences.prefs.getString(Preferences.targetFolderKey, "")
                         .takeIf { !it.isNullOrBlank() }
-                    directoryPicker.launch(lastDir?.let { Uri.parse(it) })
+                    directoryPicker.launch(lastDir?.toUri())
                 }
             ) {
                 Text(stringResource(R.string.choose_dir))
@@ -167,7 +168,8 @@ fun SettingsScreen() {
                     defValue = 192_000
                 )
             }
-            val audioDeviceSourceValues = AudioDeviceSource.values().map { it.value }
+            // 音频来源
+            val audioDeviceSourceValues = AudioDeviceSource.entries.map { it.value }
             ChipSelector(
                 entries = listOf(
                     R.string.default_audio,
@@ -206,7 +208,9 @@ fun SettingsScreen() {
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            val audioValues = AudioSource.values().map { it.value }
+
+            //录屏音频设置
+            val audioValues = AudioSource.entries.map { it.value }
             ChipSelector(
                 title = stringResource(R.string.screen_recorder),
                 entries = listOf(R.string.no_audio, R.string.microphone).map {

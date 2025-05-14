@@ -20,8 +20,7 @@ fun RecorderPreview(recordScreenMode: Boolean) {
         )
     } else {
         Crossfade(
-            modifier = Modifier.fillMaxSize(),
-            targetState = recorderModel.recordedAmplitudes
+            modifier = Modifier.fillMaxSize(), targetState = recorderModel.recordedAmplitudes
         ) {
             when (it.isEmpty()) {
                 true -> BlobIconBox(
@@ -29,8 +28,7 @@ fun RecorderPreview(recordScreenMode: Boolean) {
                 )
 
                 false -> AudioVisualizer(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
