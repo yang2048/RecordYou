@@ -1,5 +1,6 @@
 package com.bnyro.recorder.ui.screens
 
+import android.annotation.SuppressLint
 import android.view.SoundEffectConstants
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -10,17 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.VideoLibrary
-import androidx.compose.material.icons.filled.Videocam
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -41,12 +33,13 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     initialRecorder: RecorderType,
     onNavigate: (Destination) -> Unit,
-    recorderModel: RecorderModel = viewModel(LocalContext.current as ComponentActivity)
+    @SuppressLint("ContextCastToActivity") recorderModel: RecorderModel = viewModel(LocalContext.current as ComponentActivity)
 ) {
     val pagerState =
         rememberPagerState(initialPage = if (initialRecorder == RecorderType.VIDEO) 1 else 0) { 2 }
     val scope = rememberCoroutineScope()
     val view = LocalView.current
+    val context = LocalContext.current
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(title = { Text(stringResource(R.string.app_name)) }, actions = {
             ClickableIcon(
@@ -60,6 +53,14 @@ fun HomeScreen(
                 contentDescription = stringResource(R.string.recordings)
             ) {
                 onNavigate(Destination.RecordingPlayer)
+            }
+
+            IconButton(
+                onClick = {
+                    recorderModel.toDesk(view)
+                }
+            ) {
+                Icon(Icons.Default.Window, "debug")
             }
         })
     }, bottomBar = {

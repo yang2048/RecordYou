@@ -13,9 +13,9 @@ import android.util.SparseIntArray
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import com.bnyro.recorder.App
-import java.nio.ByteBuffer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.nio.ByteBuffer
 
 class MediaTrimmer {
     @RequiresApi(Build.VERSION_CODES.O)

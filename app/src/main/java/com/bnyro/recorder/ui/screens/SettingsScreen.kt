@@ -1,32 +1,17 @@
 package com.bnyro.recorder.ui.screens
 
-import android.net.Uri
 import android.os.Build
 import android.view.SoundEffectConstants
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -34,25 +19,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bnyro.recorder.R
-import com.bnyro.recorder.enums.AudioChannels
-import com.bnyro.recorder.enums.AudioDeviceSource
-import com.bnyro.recorder.enums.AudioSource
-import com.bnyro.recorder.enums.ThemeMode
-import com.bnyro.recorder.enums.VideoFormat
+import com.bnyro.recorder.enums.*
 import com.bnyro.recorder.obj.AudioFormat
-import com.bnyro.recorder.ui.common.CheckboxPref
-import com.bnyro.recorder.ui.common.ChipSelector
-import com.bnyro.recorder.ui.common.ClickableIcon
-import com.bnyro.recorder.ui.common.CustomNumInputPref
-import com.bnyro.recorder.ui.common.SelectionDialog
+import com.bnyro.recorder.ui.common.*
 import com.bnyro.recorder.ui.components.NamingPatternPref
 import com.bnyro.recorder.ui.dialogs.AboutDialog
 import com.bnyro.recorder.ui.models.ThemeModel
 import com.bnyro.recorder.util.PickFolderContract
 import com.bnyro.recorder.util.Preferences
-import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

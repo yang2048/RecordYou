@@ -12,8 +12,6 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Display
-import android.view.WindowManager
-import android.view.WindowMetrics
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import com.bnyro.recorder.App

@@ -4,17 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.graphics.PixelFormat
-import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.setViewTreeLifecycleOwner
@@ -23,7 +23,6 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.bnyro.recorder.ui.theme.RecordYouTheme
 
 @SuppressLint("ClickableViewAccessibility")
-@RequiresApi(Build.VERSION_CODES.O)
 class CanvasOverlay(context: Context) {
     private val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
     private val canvasView = ComposeView(context).apply {
@@ -102,6 +101,12 @@ class CanvasOverlay(context: Context) {
                 windowManager.addView(canvasView, params)
             }
             if (toolbarView.windowToken == null && toolbarView.parent == null) {
+                toolbarViewParams.format = PixelFormat.RGBA_8888; // 设置view效果为背景透明
+//                toolbarViewParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR;
+//                toolbarViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;//后面窗口仍然可以处理点击事件
+                toolbarViewParams.flags = (WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+                toolbarViewParams.setTitle("Toolbar");
                 windowManager.addView(toolbarView, toolbarViewParams)
             }
         } catch (e: Exception) {
@@ -136,5 +141,13 @@ class CanvasOverlay(context: Context) {
         } catch (e: Exception) {
             Log.e("Remove Overlay", e.toString())
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenPreview() {
+    RecordYouTheme() {
+        MainCanvas()
     }
 }

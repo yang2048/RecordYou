@@ -1,5 +1,6 @@
 package com.bnyro.recorder.ui.components
 
+import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,26 +12,21 @@ import com.bnyro.recorder.R
 import com.bnyro.recorder.ui.common.BlobIconBox
 import com.bnyro.recorder.ui.models.RecorderModel
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun RecorderPreview(recordScreenMode: Boolean) {
     val recorderModel: RecorderModel = viewModel(LocalContext.current as ComponentActivity)
-    if (recordScreenMode) {
-        BlobIconBox(
-            icon = R.drawable.ic_screen_record
-        )
-    } else {
-        Crossfade(
-            modifier = Modifier.fillMaxSize(), targetState = recorderModel.recordedAmplitudes
-        ) {
-            when (it.isEmpty()) {
-                true -> BlobIconBox(
-                    icon = R.drawable.ic_mic
-                )
+    Crossfade(
+        modifier = Modifier.fillMaxSize(), targetState = recorderModel.recordedAmplitudes
+    ) {
+        when (it.isEmpty()) {
+            true -> BlobIconBox(
+                icon = if (recordScreenMode) R.drawable.ic_screen_record else R.drawable.ic_mic
+            )
 
-                false -> AudioVisualizer(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            false -> AudioVisualizer(
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

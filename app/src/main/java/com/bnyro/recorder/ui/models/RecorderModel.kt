@@ -2,6 +2,7 @@ package com.bnyro.recorder.ui.models
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,14 +11,16 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.bnyro.recorder.R
 import com.bnyro.recorder.canvas_overlay.CanvasOverlay
@@ -30,6 +33,7 @@ import com.bnyro.recorder.services.RecorderService
 import com.bnyro.recorder.services.ScreenRecorderService
 import com.bnyro.recorder.util.PermissionHelper
 import com.bnyro.recorder.util.Preferences
+
 
 class RecorderModel : ViewModel() {
     private val supportsOverlay = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
@@ -64,9 +68,18 @@ class RecorderModel : ViewModel() {
     fun startVideoRecorder(context: Context, result: ActivityResult) {
         activityResult = result
         val serviceIntent = Intent(context, ScreenRecorderService::class.java)
+        val showOverlayAnnotation = Preferences.prefs.getBoolean(Preferences.showOverlayAnnotationToolKey, false)
+        if (showOverlayAnnotation && !Settings.canDrawOverlays(context)) {
+            val activity = context as Activity
+            Toast.makeText(context, "未授权悬浮窗权限", Toast.LENGTH_SHORT).show();
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                ("package:" + activity.packageName).toUri()
+            )
+            activity.startActivityForResult(intent, 10002)
+            return
+        }
         startRecorderService(context, serviceIntent)
-        val showOverlayAnnotation =
-            Preferences.prefs.getBoolean(Preferences.showOverlayAnnotationToolKey, false)
         if (supportsOverlay && showOverlayAnnotation) {
             canvasOverlay = CanvasOverlay(context)
         }
@@ -105,6 +118,25 @@ class RecorderModel : ViewModel() {
         startRecorderService(context, serviceIntent)
     }
 
+    @SuppressLint("ServiceCast")
+    fun toDesk(view: View) {
+        val context = view.context
+        val showOverlayAnnotation = Preferences.prefs.getBoolean(Preferences.showOverlayAnnotationToolKey, false)
+        if (showOverlayAnnotation && !Settings.canDrawOverlays(context)) {
+            val activity = context as Activity
+            Toast.makeText(context, "未授权悬浮窗权限", Toast.LENGTH_SHORT).show();
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                ("package:" + activity.packageName).toUri()
+            )
+            activity.startActivityForResult(intent, 10002)
+            return
+        }
+//        if (supportsOverlay && showOverlayAnnotation) {
+//            canvasOverlay = CanvasOverlay(context)
+//        }
+    }
+
     private fun startRecorderService(context: Context, intent: Intent) {
         runCatching {
             context.unbindService(connection)
@@ -133,12 +165,10 @@ class RecorderModel : ViewModel() {
         recordedAmplitudes.clear()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun pauseRecording() {
         recorderService?.pause()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun resumeRecording() {
         recorderService?.resume()
         handler.postDelayed(this::updateTime, 1000)

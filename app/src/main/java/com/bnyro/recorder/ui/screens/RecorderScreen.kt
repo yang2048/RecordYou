@@ -1,5 +1,6 @@
 package com.bnyro.recorder.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import com.bnyro.recorder.ui.components.RecorderController
 import com.bnyro.recorder.ui.components.RecorderPreview
 import com.bnyro.recorder.ui.models.RecorderModel
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun RecorderView(
     recordScreenMode: Boolean
